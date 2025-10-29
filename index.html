@@ -487,7 +487,828 @@
     </div>
 
     <script>
-        const SERVER_URL = '192.168.1.46';
+       <!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Pokémon Drop">
+    <meta name="theme-color" content="#1a1a2e">
+    <title>Pokémon Drop Notifier</title>
+    <link rel="manifest" href="data:application/json;base64,ewogICJuYW1lIjogIlBva8OpbW9uIERyb3AgTm90aWZpZXIiLAogICJzaG9ydF9uYW1lIjogIlBva8OpbW9uIERyb3AiLAogICJzdGFydF91cmwiOiAiLyIsCiAgImRpc3BsYXkiOiAic3RhbmRhbG9uZSIsCiAgImJhY2tncm91bmRfY29sb3IiOiAiIzFhMWEyZSIsCiAgInRoZW1lX2NvbG9yIjogIiMxYTFhMmUiLAogICJpY29ucyI6IFsKICAgIHsKICAgICAgInNyYyI6ICJkYXRhOmltYWdlL3N2Zyt4bWwsJTNDc3ZnIHhtbG5zPSdodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2Zycgdmlld0JveD0nMCAwIDEwMCAxMDAnJTNFJTNDY2lyY2xlIGN4PSc1MCcgY3k9JzUwJyByPSc0NScgZmlsbD0nJTIzZmYzNDM0JyUyRiUzRSUzQ2NpcmNsZSBjeD0nNTAnIGN5PSc1MCcgcj0nMzAnIGZpbGw9JyUyM2ZmZiclMkYlM0UlM0NjaXJjbGUgY3g9JzUwJyBjeT0nNTAnIHI9JzE1JyBmaWxsPSclMjMzMzMnJTJGJTNFJTNDJTJGc3ZnJTNFIiwKICAgICAgInNpemVzIjogIjE5MngxOTIiLAogICAgICAidHlwZSI6ICJpbWFnZS9zdmcreG1sIgogICAgfSwKICAgIHsKICAgICAgInNyYyI6ICJkYXRhOmltYWdlL3N2Zyt4bWwsJTNDc3ZnIHhtbG5zPSdodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2Zycgdmlld0JveD0nMCAwIDEwMCAxMDAnJTNFJTNDY2lyY2xlIGN4PSc1MCcgY3k9JzUwJyByPSc0NScgZmlsbD0nJTIzZmYzNDM0JyUyRiUzRSUzQ2NpcmNsZSBjeD0nNTAnIGN5PSc1MCcgcj0nMzAnIGZpbGw9JyUyM2ZmZiclMkYlM0UlM0NjaXJjbGUgY3g9JzUwJyBjeT0nNTAnIHI9JzE1JyBmaWxsPSclMjMzMzMnJTJGJTNFJTNDJTJGc3ZnJTNFIiwKICAgICAgInNpemVzIjogIjUxMng1MTIiLAogICAgICAidHlwZSI6ICJpbWFnZS9zdmcreG1sIgogICAgfQogIF0KfQ==">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            color: #fff;
+            min-height: 100vh;
+            padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
+            padding-top: max(env(safe-area-inset-top), 20px);
+            padding-bottom: max(env(safe-area-inset-bottom), 20px);
+            overflow-x: hidden;
+            user-select: none;
+        }
+        
+        .container {
+            max-width: 500px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        .header {
+            text-align: center;
+            padding: 20px 0 30px 0;
+            animation: fadeIn 0.6s ease-in;
+        }
+        
+        .logo {
+            font-size: 60px;
+            margin-bottom: 10px;
+            animation: bounce 2s infinite;
+        }
+        
+        h1 {
+            font-size: 26px;
+            margin-bottom: 8px;
+            background: linear-gradient(45deg, #ff3434, #ffcd3c);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .subtitle {
+            color: #8b92a7;
+            font-size: 13px;
+        }
+        
+        .status-card {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 20px;
+            margin: 20px 0;
+            animation: slideUp 0.6s ease-out;
+        }
+        
+        .status {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 15px;
+        }
+        
+        .status-dot {
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+            flex-shrink: 0;
+        }
+        
+        .status-dot.connected {
+            background: #00ff88;
+            box-shadow: 0 0 15px rgba(0, 255, 136, 0.6);
+        }
+        
+        .status-dot.disconnected {
+            background: #ff3434;
+            box-shadow: 0 0 15px rgba(255, 52, 52, 0.6);
+        }
+        
+        .status-info {
+            flex: 1;
+            min-width: 0;
+        }
+        
+        .status-text {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 3px;
+        }
+        
+        .status-url {
+            font-size: 11px;
+            color: #8b92a7;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+        
+        .warning-banner {
+            background: linear-gradient(135deg, #ff6b35, #f7931e);
+            border-radius: 15px;
+            padding: 15px;
+            margin: 15px 0;
+            animation: slideDown 0.6s ease-out;
+        }
+        
+        .warning-title {
+            font-size: 14px;
+            font-weight: 700;
+            margin-bottom: 5px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .warning-text {
+            font-size: 12px;
+            opacity: 0.95;
+            line-height: 1.4;
+        }
+        
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+            margin-top: 15px;
+        }
+        
+        .stat {
+            text-align: center;
+            padding: 12px;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 12px;
+        }
+        
+        .stat-value {
+            font-size: 24px;
+            font-weight: bold;
+            color: #ffcd3c;
+        }
+        
+        .stat-label {
+            font-size: 11px;
+            color: #8b92a7;
+            margin-top: 4px;
+        }
+        
+        .controls {
+            display: grid;
+            gap: 10px;
+            margin-top: 15px;
+        }
+        
+        .control-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+        }
+        
+        .control-label {
+            display: flex;
+            flex-direction: column;
+            gap: 3px;
+        }
+        
+        .control-title {
+            font-weight: 600;
+            font-size: 14px;
+        }
+        
+        .control-desc {
+            font-size: 11px;
+            color: #8b92a7;
+        }
+        
+        .toggle-switch {
+            position: relative;
+            width: 48px;
+            height: 26px;
+            background: #555;
+            border-radius: 13px;
+            cursor: pointer;
+            transition: background 0.3s;
+            flex-shrink: 0;
+        }
+        
+        .toggle-switch.active {
+            background: #00ff88;
+        }
+        
+        .toggle-slider {
+            position: absolute;
+            top: 3px;
+            left: 3px;
+            width: 20px;
+            height: 20px;
+            background: white;
+            border-radius: 50%;
+            transition: transform 0.3s;
+        }
+        
+        .toggle-switch.active .toggle-slider {
+            transform: translateX(22px);
+        }
+        
+        .history {
+            margin-top: 25px;
+        }
+        
+        .history-title {
+            font-size: 16px;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 600;
+        }
+        
+        .history-list {
+            max-height: 280px;
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+        
+        .history-item {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 12px;
+            margin-bottom: 8px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            animation: slideIn 0.4s ease-out;
+            -webkit-tap-highlight-color: transparent;
+        }
+        
+        .history-item:active {
+            transform: scale(0.98);
+            background: rgba(255, 255, 255, 0.1);
+        }
+        
+        .history-site {
+            font-weight: 600;
+            color: #ffcd3c;
+            font-size: 13px;
+            margin-bottom: 4px;
+        }
+        
+        .history-url {
+            font-size: 11px;
+            color: #8b92a7;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+        
+        .history-time {
+            font-size: 10px;
+            color: #5a6278;
+            margin-top: 4px;
+        }
+        
+        .install-prompt {
+            background: linear-gradient(135deg, #ff3434, #ff6b6b);
+            border-radius: 15px;
+            padding: 18px;
+            margin: 15px 0;
+            text-align: center;
+            animation: slideDown 0.6s ease-out;
+        }
+        
+        .install-icon {
+            font-size: 32px;
+            margin-bottom: 8px;
+        }
+        
+        .install-title {
+            font-weight: 600;
+            margin-bottom: 5px;
+            font-size: 15px;
+        }
+        
+        .install-desc {
+            font-size: 12px;
+            opacity: 0.9;
+            margin-bottom: 10px;
+            line-height: 1.4;
+        }
+        
+        .install-btn {
+            background: white;
+            color: #ff3434;
+            border: none;
+            padding: 10px 25px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s;
+            -webkit-tap-highlight-color: transparent;
+        }
+        
+        .install-btn:active {
+            transform: scale(0.95);
+        }
+        
+        .empty-state {
+            text-align: center;
+            padding: 35px 20px;
+            color: #8b92a7;
+        }
+        
+        .empty-state-icon {
+            font-size: 40px;
+            margin-bottom: 8px;
+            opacity: 0.5;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(-15px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+        
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-8px); }
+        }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.7; transform: scale(1.1); }
+        }
+        
+        /* iOS scrollbar styling */
+        ::-webkit-scrollbar {
+            width: 4px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 2px;
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 2px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="logo">🎮</div>
+            <h1>Pokémon Drop Notifier</h1>
+            <p class="subtitle">Notifications instantanées des drops</p>
+        </div>
+
+        <div id="installPrompt" class="install-prompt" style="display: none;">
+            <div class="install-icon">📱</div>
+            <div class="install-title">Ajouter à l'écran d'accueil</div>
+            <div class="install-desc">
+                Pour recevoir les notifications, ajoutez cette app à votre écran d'accueil
+            </div>
+            <button class="install-btn" onclick="showInstallInstructions()">Comment faire ?</button>
+        </div>
+
+        <div class="warning-banner">
+            <div class="warning-title">
+                <span>⚠️</span>
+                <span>Important : Gardez l'app ouverte</span>
+            </div>
+            <div class="warning-text">
+                Cette app doit rester ouverte au premier plan pour recevoir les drops. iOS coupe la connexion si vous changez d'app.
+            </div>
+        </div>
+
+        <div class="status-card">
+            <div class="status">
+                <div id="statusDot" class="status-dot disconnected"></div>
+                <div class="status-info">
+                    <div class="status-text" id="statusText">Connexion...</div>
+                    <div class="status-url" id="serverUrl"></div>
+                </div>
+            </div>
+
+            <div class="stats">
+                <div class="stat">
+                    <div class="stat-value" id="dropCount">0</div>
+                    <div class="stat-label">Drops reçus</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-value" id="uptime">00:00</div>
+                    <div class="stat-label">Temps actif</div>
+                </div>
+            </div>
+
+            <div class="controls">
+                <div class="control-item">
+                    <div class="control-label">
+                        <div class="control-title">🔔 Son des notifications</div>
+                        <div class="control-desc">Alerte sonore à chaque drop</div>
+                    </div>
+                    <div class="toggle-switch active" id="soundToggle" onclick="toggleSound()">
+                        <div class="toggle-slider"></div>
+                    </div>
+                </div>
+                
+                <div class="control-item">
+                    <div class="control-label">
+                        <div class="control-title">📳 Vibration</div>
+                        <div class="control-desc">Vibrer lors des notifications</div>
+                    </div>
+                    <div class="toggle-switch active" id="vibrationToggle" onclick="toggleVibration()">
+                        <div class="toggle-slider"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="history">
+            <div class="history-title">
+                <span>📜</span>
+                <span>Historique des drops</span>
+            </div>
+            <div class="history-list" id="historyList">
+                <div class="empty-state">
+                    <div class="empty-state-icon">🎯</div>
+                    <div>En attente de drops...</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Configuration - MODIFIEZ ICI
+        const SERVER_HOST = '192.168.1.46';  // ⬅️ CHANGEZ PAR L'IP DE VOTRE PC
+        const SERVER_PORT = 8080;
+        
+        // Détection automatique du protocole (ws:// ou wss://)
+        const isSecure = window.location.protocol === 'https:';
+        const wsProtocol = isSecure ? 'wss:' : 'ws:';
+        const SERVER_URL = `${wsProtocol}//${SERVER_HOST}:${SERVER_PORT}`;
+        
+        console.log('🔗 Connexion à:', SERVER_URL);
+        
+        const KEYWORDS = ['micromania', 'maisondelapresse', 'pokemon'];
+        
+        let ws = null;
+        let dropCount = 0;
+        let startTime = Date.now();
+        let soundEnabled = true;
+        let vibrationEnabled = true;
+        let reconnectAttempts = 0;
+        let deferredPrompt = null;
+        let wakeLock = null;
+        
+        // Historique des drops
+        let history = JSON.parse(localStorage.getItem('dropHistory') || '[]');
+
+        // Détection iOS
+        const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+
+        // Afficher prompt d'installation pour iOS
+        if (isIOS) {
+            // Vérifier si déjà en mode standalone
+            if (!window.navigator.standalone) {
+                document.getElementById('installPrompt').style.display = 'block';
+            }
+        }
+
+        // Gestion de l'installation PWA (Android)
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            deferredPrompt = e;
+            document.getElementById('installPrompt').style.display = 'block';
+        });
+
+        function showInstallInstructions() {
+            if (deferredPrompt) {
+                deferredPrompt.prompt();
+                deferredPrompt.userChoice.then((choice) => {
+                    if (choice.outcome === 'accepted') {
+                        document.getElementById('installPrompt').style.display = 'none';
+                    }
+                    deferredPrompt = null;
+                });
+            } else if (isIOS) {
+                alert('📱 Sur iPhone:\n\n1. Appuyez sur le bouton Partager (icône carré avec flèche)\n2. Faites défiler et appuyez sur "Sur l\'écran d\'accueil"\n3. Appuyez sur "Ajouter"\n\n✅ L\'app apparaîtra sur votre écran d\'accueil !');
+            }
+        }
+
+        // Toggle son
+        function toggleSound() {
+            soundEnabled = !soundEnabled;
+            const toggle = document.getElementById('soundToggle');
+            toggle.classList.toggle('active', soundEnabled);
+            localStorage.setItem('soundEnabled', soundEnabled);
+        }
+
+        // Toggle vibration
+        function toggleVibration() {
+            vibrationEnabled = !vibrationEnabled;
+            const toggle = document.getElementById('vibrationToggle');
+            toggle.classList.toggle('active', vibrationEnabled);
+            localStorage.setItem('vibrationEnabled', vibrationEnabled);
+        }
+
+        // Charger préférences
+        soundEnabled = localStorage.getItem('soundEnabled') !== 'false';
+        vibrationEnabled = localStorage.getItem('vibrationEnabled') !== 'false';
+        if (!soundEnabled) document.getElementById('soundToggle').classList.remove('active');
+        if (!vibrationEnabled) document.getElementById('vibrationToggle').classList.remove('active');
+
+        // Jouer un son
+        function playNotificationSound() {
+            if (!soundEnabled) return;
+            
+            try {
+                const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                const oscillator = audioContext.createOscillator();
+                const gainNode = audioContext.createGain();
+                
+                oscillator.connect(gainNode);
+                gainNode.connect(audioContext.destination);
+                
+                oscillator.frequency.value = 800;
+                oscillator.type = 'sine';
+                
+                gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
+                gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.5);
+                
+                oscillator.start(audioContext.currentTime);
+                oscillator.stop(audioContext.currentTime + 0.5);
+            } catch (e) {
+                console.log('Son non disponible');
+            }
+        }
+
+        // Vibration
+        function vibrate() {
+            if (!vibrationEnabled) return;
+            if (navigator.vibrate) {
+                navigator.vibrate([200, 100, 200]);
+            }
+        }
+
+        // Vérifier si le message contient des mots-clés
+        function shouldOpenUrl(message) {
+            const lower = message.toLowerCase();
+            return KEYWORDS.some(keyword => lower.includes(keyword));
+        }
+
+        // Ouvrir une URL
+        function openUrl(url, site = 'Drop Pokémon') {
+            playNotificationSound();
+            vibrate();
+            
+            // Ajouter à l'historique
+            addToHistory(url, site);
+            
+            // Ouvrir immédiatement
+            window.open(url, '_blank');
+            
+            dropCount++;
+            document.getElementById('dropCount').textContent = dropCount;
+        }
+
+        // Ajouter à l'historique
+        function addToHistory(url, site) {
+            const item = {
+                url: url,
+                site: site,
+                timestamp: new Date().toISOString()
+            };
+            
+            history.unshift(item);
+            if (history.length > 20) history = history.slice(0, 20);
+            
+            localStorage.setItem('dropHistory', JSON.stringify(history));
+            renderHistory();
+        }
+
+        // Afficher l'historique
+        function renderHistory() {
+            const container = document.getElementById('historyList');
+            
+            if (history.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-state-icon">🎯</div>
+                        <div>En attente de drops...</div>
+                    </div>
+                `;
+                return;
+            }
+            
+            container.innerHTML = history.map(item => {
+                const date = new Date(item.timestamp);
+                const timeStr = date.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' });
+                
+                return `
+                    <div class="history-item" onclick="window.open('${item.url}', '_blank')">
+                        <div class="history-site">${item.site}</div>
+                        <div class="history-url">${item.url}</div>
+                        <div class="history-time">${timeStr}</div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // Gérer les messages WebSocket
+        function handleMessage(message) {
+            console.log('Message reçu:', message);
+            
+            let url = message;
+            let site = 'Drop Pokémon';
+            
+            // Parser JSON si possible
+            try {
+                const data = JSON.parse(message);
+                if (data.url) {
+                    url = data.url;
+                    site = data.site || site;
+                }
+            } catch (e) {
+                // Pas du JSON, continuer
+            }
+            
+            // Vérifier et ouvrir
+            if (shouldOpenUrl(url) && (url.startsWith('http://') || url.startsWith('https://'))) {
+                openUrl(url, site);
+            }
+        }
+
+        // Connexion WebSocket avec heartbeat
+        let heartbeatInterval = null;
+        
+        function connect() {
+            if (ws && ws.readyState === WebSocket.OPEN) return;
+            
+            document.getElementById('statusText').textContent = 'Connexion...';
+            document.getElementById('statusDot').className = 'status-dot disconnected';
+            
+            // Nettoyer l'ancien heartbeat
+            if (heartbeatInterval) {
+                clearInterval(heartbeatInterval);
+                heartbeatInterval = null;
+            }
+            
+            try {
+                ws = new WebSocket(SERVER_URL);
+                
+                ws.onopen = () => {
+                    console.log('✅ Connecté au serveur');
+                    document.getElementById('statusText').textContent = 'Connecté';
+                    document.getElementById('statusDot').className = 'status-dot connected';
+                    document.getElementById('serverUrl').textContent = SERVER_URL;
+                    reconnectAttempts = 0;
+                    
+                    // Envoyer un ping toutes les 15 secondes pour garder la connexion active
+                    heartbeatInterval = setInterval(() => {
+                        if (ws.readyState === WebSocket.OPEN) {
+                            try {
+                                ws.send(JSON.stringify({ type: 'ping', timestamp: Date.now() }));
+                                console.log('💓 Heartbeat envoyé');
+                            } catch (e) {
+                                console.error('Erreur heartbeat:', e);
+                            }
+                        }
+                    }, 15000);
+                };
+                
+                ws.onmessage = (event) => {
+                    console.log('📩 Message reçu:', event.data);
+                    handleMessage(event.data);
+                };
+                
+                ws.onerror = (error) => {
+                    console.error('❌ Erreur WebSocket:', error);
+                };
+                
+                ws.onclose = (event) => {
+                    console.log('⚠️ Connexion fermée. Code:', event.code, 'Raison:', event.reason);
+                    document.getElementById('statusText').textContent = 'Déconnecté';
+                    document.getElementById('statusDot').className = 'status-dot disconnected';
+                    
+                    // Nettoyer le heartbeat
+                    if (heartbeatInterval) {
+                        clearInterval(heartbeatInterval);
+                        heartbeatInterval = null;
+                    }
+                    
+                    // Reconnexion automatique
+                    reconnectAttempts++;
+                    const delay = Math.min(5000, 2000 * reconnectAttempts);
+                    console.log(`🔄 Reconnexion dans ${delay/1000}s...`);
+                    setTimeout(connect, delay);
+                };
+                
+            } catch (error) {
+                console.error('❌ Erreur de connexion:', error);
+                setTimeout(connect, 5000);
+            }
+        }
+
+        // Mise à jour du timer
+        function updateUptime() {
+            const elapsed = Math.floor((Date.now() - startTime) / 1000);
+            const hours = Math.floor(elapsed / 3600);
+            const minutes = Math.floor((elapsed % 3600) / 60);
+            const seconds = elapsed % 60;
+            
+            let timeStr = '';
+            if (hours > 0) {
+                timeStr = `${hours}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+            } else {
+                timeStr = `${minutes}:${seconds.toString().padStart(2, '0')}`;
+            }
+            
+            document.getElementById('uptime').textContent = timeStr;
+        }
+
+        // Garder l'écran actif
+        async function requestWakeLock() {
+            try {
+                if ('wakeLock' in navigator) {
+                    wakeLock = await navigator.wakeLock.request('screen');
+                    console.log('Wake Lock activé');
+                }
+            } catch (err) {
+                console.log('Wake Lock non disponible');
+            }
+        }
+        
+        // Réactiver Wake Lock si l'app revient au premier plan
+        document.addEventListener('visibilitychange', async () => {
+            if (!document.hidden) {
+                if (ws.readyState !== WebSocket.OPEN) {
+                    connect();
+                }
+                await requestWakeLock();
+            }
+        });
+
+        // Prévenir la fermeture accidentelle
+        window.addEventListener('beforeunload', (e) => {
+            if (ws && ws.readyState === WebSocket.OPEN) {
+                e.preventDefault();
+                e.returnValue = '';
+                return 'L\'app est connectée. Êtes-vous sûr de vouloir quitter ?';
+            }
+        });
+
+        // Initialisation
+        console.log('🚀 Démarrage de la PWA Pokémon Drop');
+        renderHistory();
+        connect();
+        setInterval(updateUptime, 1000);
+        requestWakeLock();
+        
+        // Message de bienvenue dans la console
+        console.log('%c🎮 PWA Pokémon Drop Notifier', 'font-size: 20px; font-weight: bold; color: #ff3434;');
+        console.log('%c⚠️ Gardez cette app ouverte au premier plan pour recevoir les notifications', 'font-size: 14px; color: #ffcd3c;');
+        console.log('%cServeur: ' + SERVER_URL, 'font-size: 12px; color: #8b92a7;');
+    </script>
+</body>
+</html>
         const KEYWORDS = ['micromania', 'maisondelapresse', 'pokemon'];
         
         let ws = null;
